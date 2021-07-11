@@ -1,0 +1,41 @@
+name: Runs root tests to verify the sugar-tms public artifact accessibility for all Scala versions
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact-version:
+        description: "Version of the sugar-tms artifact to test. Leave blank to test on its project code"
+        required: false
+        default: ''
+      java-version-number:
+        description: "Run under JDK version"
+        required: true
+        default: '16'
+      run-on-os:
+        description: "The operating system to run the sbt on: windows-latest, macOS-latest, ubuntu-latest, etc."
+        required: true
+        default: ubuntu-latest
+
+env:
+  # define Java options for both official sbt and sbt-extras -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
+  JAVA_OPTS: -Dfile.encoding=UTF-8
+  JVM_OPTS:  -Dfile.encoding=UTF-8
+
+jobs:
+  run-root-tests:
+    runs-on: ${{ github.event.inputs.run-on-os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: 'Set up JDK ${{ github.event.inputs.java-version-number }} on ${{ github.event.inputs.run-on-os }}'
+      uses: actions/setup-java@v2
+      with:
+        java-version: '${{ github.event.inputs.java-version-number }}'
+        distribution: 'adopt'
+    - name: Setup sbt on MacOS
+      if: ${{ startsWith(github.event.inputs.run-on-os, 'macOS') }}
+      run: brew install sbt
+    - if: ${{ github.event.inputs.artifact-version != '' }}
+      run: sbt -DrootTmsArtifactDependencyVersion=${{ github.event.inputs.artifact-version }} "+test"
+    - if: ${{ github.event.inputs.artifact-version == '' }}
+      run: sbt "+test"

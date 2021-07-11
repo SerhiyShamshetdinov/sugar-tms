@@ -1,0 +1,8 @@
+.bsp
+.idea
+.history
+target/
+src_managed/
+tmp*
+*.sc
+*.iml

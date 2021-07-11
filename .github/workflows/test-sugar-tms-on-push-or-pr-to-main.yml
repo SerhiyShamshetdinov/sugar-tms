@@ -1,0 +1,105 @@
+name: sugar-tms tests on push to or on the creating PR to 'main' branch if sources are changed
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths: ['build.sbt', 'project/**', 'src/**']
+
+  push:
+    branches: [ main ]
+    paths: ['build.sbt', 'project/**', 'src/**']
+
+env:
+  # define Java options for both official sbt and sbt-extras -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
+  JAVA_OPTS: -Dfile.encoding=UTF-8
+  JVM_OPTS:  -Dfile.encoding=UTF-8
+
+jobs:
+  sugar-tms-test-all-scala-versions:
+    name: Runs full sugar-tms tests in parallel for hardcoded here Scala versions on ubuntu-latest under JDK 16
+
+    strategy:
+      fail-fast: false
+      matrix:
+        run-on-os: [ ubuntu-latest ]
+        scala-version: [ "2.11.12", "2.12.12", "2.12.14", "2.13.6" ]
+        jdk-version: [ 16 ]
+
+    runs-on: ${{ matrix.run-on-os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK ${{ matrix.jdk-version }} on ${{ matrix.run-on-os }}
+      uses: actions/setup-java@v2
+      with:
+        java-version: '${{ matrix.jdk-version }}'
+        distribution: 'adopt'
+    - name: Setup sbt on MacOS
+      if: ${{ startsWith(matrix.run-on-os, 'macOS') }}
+      run: brew install sbt
+    - run: sbt ";++${{ matrix.scala-version }};sugar-tms/test"
+
+  sugar-tms-testonly-jdk-dependent:
+    name: Runs sugar-tms JDK dependent tests in parallel for hardcoded here Scala versions on ubuntu-latest under JDK 8 & 11
+
+    strategy:
+      fail-fast: false
+      matrix:
+        run-on-os: [ ubuntu-latest ]
+        scala-version: [ "2.11.12", "2.12.12", "2.12.14", "2.13.6" ]
+        jdk-version: [ 8, 11 ]
+
+    runs-on: ${{ matrix.run-on-os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK ${{ matrix.jdk-version }} on ${{ matrix.run-on-os }}
+      uses: actions/setup-java@v2
+      with:
+        java-version: '${{ matrix.jdk-version }}'
+        distribution: 'adopt'
+    - name: Setup sbt on MacOS
+      if: ${{ startsWith(matrix.run-on-os, 'macOS') }}
+      run: brew install sbt
+    - run: sbt ";++${{ matrix.scala-version }};sugar-tms/testOnly sands.sugar.tms.predef.TmsForStringNativeMethodsTest sands.sugar.tms.predef.TmsForCharArrayTest"
+
+  sugar-tms-test-project-scala-last-jdk-on-other-oses:
+    name: Runs full sugar-tms tests in parallel for project Scala version on windows-latest & macOS-latest under JDK 16
+
+    strategy:
+      fail-fast: false
+      matrix:
+        run-on-os: [ windows-latest, macOS-latest ]
+        jdk-version: [ 16 ]
+
+    runs-on: ${{ matrix.run-on-os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK ${{ matrix.jdk-version }} on ${{ matrix.run-on-os }}
+      uses: actions/setup-java@v2
+      with:
+        java-version: '${{ matrix.jdk-version }}'
+        distribution: 'adopt'
+    - name: Setup sbt on MacOS
+      if: ${{ startsWith(matrix.run-on-os, 'macOS') }}
+      run: brew install sbt
+    - run: sbt "sugar-tms/test"
+
+#TODO or not TODO ?) github sends failed tests results & ones are also visible in PR without this message.
+#  Commented due to GitNub not trusted mb2dev/github-action-comment-pull-request action error
+#  send-success-to-pr:
+#    name: Send messages to PR on all tests success
+#
+#    if: ${{ github.event_name == 'pull_request' }}
+#    needs: [sugar-tms-test-all-scala-versions, sugar-tms-testonly-jdk-dependent, sugar-tms-test-project-scala-last-jdk-on-other-oses]
+#
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - name: Sends success message to PR
+#      uses: mb2dev/github-action-comment-pull-request@1.0.0
+#      with:
+#        message: "Congratulations! sugar-tms tests are successfully passed"
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        reactions: "+1 | rocket"
