@@ -95,15 +95,27 @@ In any case, do not format on commit, please.
 Please, do not forget to:
 - test changes: add new tests for new or extended functionality, do regression
 - update in-repo documentation: explain new features or correct the old descriptions to the new behavior
-- rebase on the 'main' branch of the original repo (upstream repository) squashing your commits & make the pull-request to upstream
+- rebase on the `main` branch of the original repo (upstream repository) squashing your commits & make the pull-request to upstream
 - when something useful found while working on issue: comment on issue or open new required ones  
 
-#### How to test locally
-Run `sugar-tms/test` to run tests for default Scala version or run `+sugar-tms/test` to test with all supported Scala versions.
+#### How to test
+CI tests will run on pushing to the only `main` branch and on creating PR to it.
+
+But keep in mind that you have the limit of free minutes for automation on all your private projects. 
+Full `sugar-tms` CI tests on push to `main` consumes 700 minutes (mostly due to macOS runs are
+counted x10 of real minutes, x2 for Windows, x1 for Ubuntu). Public repo has no such limits. 
+Real CI tests start-to-finish time (all in parallel) is about an hour at GitHub (due to 2.11).
+
+So, do not push to your forked repo `main` or cancel CI tests (if started) just after pushing to save your free minutes.
+
+In your forked project you should be able to run manual tests from Actions page on GitHub. Run by default on Ubuntu. 
+Single Scala 2.13 test takes and consumes about 30 minutes.
+
+To test locally run `sugar-tms/test` to run tests for default Scala version or run `+sugar-tms/test` to test with all supported Scala versions.
 
 `build.sbt` contains description of additional test options in its header comments. 
 
-To test JDK dependent changes see `tools` folder in the root of the project.
+To test under different JDK see `tools` folder in the root of the project.
 
 #### How to publish locally
 To publish artifacts for all Scala versions locally do `+sugar-tms/publishLocal`.

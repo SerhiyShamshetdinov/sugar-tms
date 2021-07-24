@@ -41,7 +41,7 @@ val scala21213p = "2.12.14"
 val scala213 = "2.13.6"
 lazy val supportedScalaVersions = List(scala211, scala21212, scala21213p, scala213)
 
-ThisBuild / version := "0.2.4"
+ThisBuild / version := "0.2.5-SNAPSHOT"
 ThisBuild / scalaVersion := supportedScalaVersions.last
 ThisBuild / description := "A macro library with built-in implicits set that implements the Transparent Monads syntax and Monadic Flow Control interpretation in Scala"
 ThisBuild / homepage := Some(url("https://github.com/SerhiyShamshetdinov/sugar-tms"))

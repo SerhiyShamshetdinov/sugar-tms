@@ -230,9 +230,10 @@ Project is compiled for target `jvm-1.8` and is tested with JDK8, JDK11 & JDK16.
 directory with batch files to run tests under different JDK versions.  
 
 Sbt `test` command will only execute simple root project tests to test the public symbols accessibility of the artifact 
-or source `sugar-tms` code: simple macros calls in the native and toolbox tests. 
-Version of the tested artifact is hardcoded in `build.sbt`. When not specified then the source project will be used. 
-For all Scala versions these root tests may be run by `+test` sbt command.
+or source `sugar-tms` code: all macro calls in the native and toolbox tests. 
+Version of the tested artifact is passed by system property or environment variable `rootTmsArtifactDependencyVersion`. 
+When not specified then the source project will be used as test dependency. For all supported Scala versions these root 
+tests may be run by `+test` sbt command.
 
 To test macros in your project inside the toolbox you may copy and adopt the sources of `tms-test-base` subproject or 
 call macros passing `Debug` and/or `Trace` options to macro call directly, with `tmsOptions` annotation, 

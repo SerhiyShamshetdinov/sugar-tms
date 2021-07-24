@@ -48,7 +48,7 @@ object TransparentMonads extends TmsImplicits {
    *  - "Pre Evaluate Monadic Flow Type"                                                 ( "PEMFT"               ) for *mfc()/mfcFor()()* macro calls it enables pre evaluation of the detected Monadic Flow type
    *  - "Pre Evaluate ''class_name/FQN'', ..."                                           ( "PE ''cn/FQN'', ..."  ) adds the list of class names or fully qualified names to the set of pre evaluated types. For example, `"PE Future, scala.util.Try"`
    *
-   * @param tmsLiteralOptions list of literal strings with full or abbreviated tms options above ignoring case
+   * @param tmsLiteralOptions list of literal strings with full or abbreviated tms options above ignoring case and trimming spaces. All options may be passed in one string separated by ';' like "D; T"
    */
   class tmsOptions(tmsLiteralOptions: String*) extends StaticAnnotation
 
