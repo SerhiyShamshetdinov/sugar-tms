@@ -64,7 +64,7 @@ ThisBuild / resolvers += "Sonatype S01 OSS Snapshots" at "https://s01.oss.sonaty
 //   !Do not publish from the root: it is blocked now! Only local publishing of sugar-tms will work from the root: >publishLocal or >publishLocalSigned
 // - On GitHub! add the release with _tag_ & _release title_ = 'v0.x.x' of a done release version
 // - fetch repo
-// - inc patch number and add '-SNAPSHOT' suffix to version in build.sbt
+// - increment patch number and add '-SNAPSHOT' suffix to version in build.sbt
 // - push the commit to GitHub & skip run tests!
 lazy val sonatypePublishSettings = Seq[Setting[_]]( // some of settings do not work when done in ThisBuild / ...
   sonatypeCredentialHost := "s01.oss.sonatype.org", // For all Sonatype accounts created on or after February 2021

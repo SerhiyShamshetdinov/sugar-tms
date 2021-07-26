@@ -71,14 +71,12 @@ GitHub article.
   Issues always contain more details to better understand what was done and why for the future
 - start a new branch from the `main` one. If to name the branch like `main-#5` then GitHub (at WEB interface) will create 
   2 links at the same time: to the branch page and to the issue page. It is suitable. Hyphen `-` is required to get 2 links 
-- increment project version in the `build.sbt`. You may add `-SNAPSHOT` suffix to publish artifacts locally
 - do the changes and add tests that verify the changed behavior or fixed bug
 - update the readme.md accordingly to your changes
 - after the work done commit changes. Start commit message with the issue number like `#5: corrects misprint`.
   GitHub will create a useful link to the issue wherever the commit message is displayed at the WEB interface
 - before pushing the final work result, do sync with upstream (original) repo and rebase you branch on the `main` branch with 
-  commits squashing to one (if you have several commits done), verify the current project version number and increment it 
-  once more when required (if somebody did it merged prior to you while you was working)
+  commits squashing to one (if you have several commits done)
 - push the branch to your forked repo and create the pull-request to the upstream (original) repo. See 
   [Creating a pull request from a fork](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
 
